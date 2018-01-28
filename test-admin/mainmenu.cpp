@@ -471,3 +471,8 @@ void MainMenu::on_settingsButton_clicked()
     Settings->setAttribute(Qt::WA_DeleteOnClose);
     Settings->show();
 }
+
+void MainMenu::save_settings_for_table(QString time, QString numberOfQuestionsForStudents)
+{
+    qDebug() << "ok";
+}

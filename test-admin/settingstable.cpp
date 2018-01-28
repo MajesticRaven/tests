@@ -1,7 +1,7 @@
 #include "settingstable.h"
 #include "ui_settingstable.h"
 
-settingsTable::settingsTable(MainMenu *parent) :
+settingsTable::settingsTable(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::settingsTable)
 {

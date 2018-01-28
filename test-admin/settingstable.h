@@ -15,7 +15,7 @@ class settingsTable : public QDialog
     Q_OBJECT
 
 public:
-    explicit settingsTable(MainMenu *parent = 0);
+    explicit settingsTable(QWidget *parent = 0);
     ~settingsTable();
 
 private slots:
