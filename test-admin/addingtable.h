@@ -5,6 +5,9 @@
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 #include <QDebug>
+#include <QMessageBox>
+
+#include "mainmenu.h"
 
 namespace Ui {
 class addingTable;

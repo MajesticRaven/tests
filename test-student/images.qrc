@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/stars.png</file>
+        <file>images/styles.qss</file>
+        <file>images/leftArrow.png</file>
+        <file>images/rightArrow.png</file>
+        <file>images/radioChecked.png</file>
+        <file>images/radioUnchecked.png</file>
+    </qresource>
+</RCC>

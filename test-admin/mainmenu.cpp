@@ -6,14 +6,32 @@ MainMenu::MainMenu(QWidget *parent) :
     ui(new Ui::MainMenu)
 {
     ui->setupUi(this);
-    ui->stackedWidget->setCurrentIndex(1);
+    this->setWindowTitle("Test Constructor");
+
+    ui->stackedWidget->setCurrentIndex(0);
 
     ui->addQuestionButton->setEnabled(false);
     ui->editQuestionButton->setEnabled(false);
     ui->deleteQuestionButton->setEnabled(false);
+    ui->settingsButton->setEnabled(false);
 
+    ui->label->setAlignment(Qt::AlignCenter);
+    ui->label_2->setAlignment(Qt::AlignCenter);
+    ui->label_3->setAlignment(Qt::AlignCenter);
+    ui->label_4->setAlignment(Qt::AlignCenter);
+    ui->settingsButton->setStyleSheet("border-image: url(:/res/settingsInactive.png);"
+                                      + QString("width: 50;")
+                                      + "height: 50;");
 
-    update_table_list(); //then delete this
+    ui->listOfQuestions->setStyleSheet(
+
+                "QListWidget::item:selected {"
+                   "background-color:  rgba(80, 58, 46, 80);"
+                "}");
+    ui->listOfTables->setStyleSheet(
+                "QListWidget::item:selected {"
+                   "background-color:  rgba(80, 58, 46, 80);"
+                "}");
 
     add_passwords();
 
@@ -22,6 +40,21 @@ MainMenu::MainMenu(QWidget *parent) :
         QFile file(qApp->applicationDirPath() + "/tests/questions.db");
         file.open(QIODevice::WriteOnly);
         file.close();
+
+        QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE");
+        database.setDatabaseName(qApp->applicationDirPath() + "/tests/questions.db");
+        database.open();
+
+        QSqlQuery query(database);
+
+        QString quer = "create table settings_of_tables"
+                + QString(" (nameOfTable TEXT,")
+                + " timeForTest INTEGER,"
+                + " numOfQuestions INTEGER);";
+
+        query.exec(quer);
+
+        database.close();
     }
 
     connect(this, SIGNAL(emit_update_table()), this, SLOT(update_table_list()));
@@ -37,8 +70,9 @@ MainMenu::~MainMenu()
 
 void MainMenu::add_passwords()
 {
-    passwords.push_back("Zllogos2017");
-    passwords.push_back("adminsPassword");
+    passwords.push_back("6fv7p4eput");
+    passwords.push_back("xrt3x87pff");
+    passwords.push_back("jv38bnm6ux");
 }
 
 void MainMenu::on_loginButton_clicked()
@@ -73,9 +107,7 @@ void MainMenu::update_question_list()
         ui->listOfQuestions->addItem(crack_cipher(query.value(0).toString()));
     }
 
-    QString conname = database.connectionName();
     database.close();
-    database.removeDatabase(conname);
 
     ui->numOfQuestionsLabel->setText(QString::number(ui->listOfQuestions->count()));
 }
@@ -97,6 +129,12 @@ void MainMenu::update_table_list()
         while(query.next())
         {
             QString name = query.value(1).toString();
+
+            if(name == "settings_of_tables")
+            {
+                continue;
+            }
+
             QString finalName = "";
 
             for(int i = 0; i < name.size(); i++)
@@ -114,9 +152,7 @@ void MainMenu::update_table_list()
             ui->listOfTables->addItem(finalName);
         }
 
-        QString conname = database.connectionName();
         database.close();
-        database.removeDatabase(conname);
 
         ui->numOfTablesLabel->setText(QString::number(ui->listOfTables->count()));
 }
@@ -140,6 +176,12 @@ void MainMenu::on_listOfTables_itemDoubleClicked(QListWidgetItem *item)
     ui->addQuestionButton->setEnabled(true);
     ui->deleteQuestionButton->setEnabled(true);
     ui->editQuestionButton->setEnabled(true);
+    ui->settingsButton->setEnabled(true);
+
+
+    ui->settingsButton->setStyleSheet("border-image: url(:/res/settings.png);"
+                                      + QString("width: 50;")
+                                      + "height: 50;");
 
     currentTable = item->text();
 
@@ -157,8 +199,6 @@ void MainMenu::on_deleteTableButton_clicked()
     QString que = "DROP TABLE " + ui->listOfTables->currentItem()->text();
     query.exec(que);
 
-    database.close();
-
     if(ui->listOfTables->currentItem()->text() == currentTable)
     {
         currentTable = "";
@@ -167,11 +207,14 @@ void MainMenu::on_deleteTableButton_clicked()
         ui->deleteQuestionButton->setEnabled(false);
         ui->addQuestionButton->setEnabled(false);
         ui->editQuestionButton->setEnabled(false);
+        ui->settingsButton->setEnabled(false);
+
+        ui->settingsButton->setStyleSheet("border-image: url(:/res/settingsInactive.png);"
+                                          + QString("width: 50;")
+                                          + "height: 50;");
     }
 
-    QString conname = database.connectionName();
     database.close();
-    database.removeDatabase(conname);
 
     emit emit_update_table();
 }
@@ -235,6 +278,8 @@ void MainMenu::on_backButton_clicked()
 QString MainMenu::create_cipher(QString input)
 {
     QString output = "";
+    QString in = "йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮQWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890 ";
+    QString out = "юбьтимсчяэждлорпавыфъхзщшгнекуцйЮБЬТИМСЧЯЭЖДЛОРПАВЫФЪХЗЩШГНЕКУЦЙMNBVCXZLKJHGFDSAPOIUYTREWQmnbvcxzlkjhgfdsapoiuytrewq0987654321*";
 
     for(int i = 0; i < input.size(); i++)
     {
@@ -252,7 +297,10 @@ QString MainMenu::create_cipher(QString input)
 
 QString MainMenu::crack_cipher(QString input)
 {
-    QString output;
+    QString output = "";
+    QString in = "йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮQWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890 ";
+    QString out = "юбьтимсчяэждлорпавыфъхзщшгнекуцйЮБЬТИМСЧЯЭЖДЛОРПАВЫФЪХЗЩШГНЕКУЦЙMNBVCXZLKJHGFDSAPOIUYTREWQmnbvcxzlkjhgfdsapoiuytrewq0987654321*";
+
     for(int i = 0; i < input.size(); i++)
     {
         for(int j = 0; j < out.size(); j++)
@@ -365,9 +413,7 @@ void MainMenu::on_saveQuestionButton_clicked()
     qDebug() << que;
     query.exec(que);
 
-    QString conname = database.connectionName();
     database.close();
-    database.removeDatabase(conname);
 
     emit emit_update_questions();
     ui->stackedWidget->setCurrentIndex(1);
@@ -376,6 +422,7 @@ void MainMenu::on_saveQuestionButton_clicked()
 void MainMenu::on_editQuestionButton_clicked()
 {
     emit emit_clear_adding_question();
+
     isQuestionNew = false;
     currentQuestion = ui->listOfQuestions->currentItem()->text();
 
@@ -420,9 +467,7 @@ void MainMenu::on_editQuestionButton_clicked()
         ui->fourthAnswerCorrect->setChecked(true);
     }
 
-    QString conname = database.connectionName();
     database.close();
-    database.removeDatabase(conname);
 
     ui->stackedWidget->setCurrentIndex(2);
 }
@@ -451,9 +496,7 @@ void MainMenu::on_deleteQuestionButton_clicked()
             + "'";
     query.exec(que);
 
-    QString conname = database.connectionName();
     database.close();
-    database.removeDatabase(conname);
 
     emit emit_update_questions();
 }
@@ -467,12 +510,43 @@ void MainMenu::on_settingsButton_clicked()
 {
     this->setEnabled(false);
 
-    settingsTable *Settings = new settingsTable(this);
+    settingsTable *Settings = new settingsTable(this, currentTable);
     Settings->setAttribute(Qt::WA_DeleteOnClose);
     Settings->show();
 }
 
 void MainMenu::save_settings_for_table(QString time, QString numberOfQuestionsForStudents)
 {
-    qDebug() << "ok";
+    bool isOld = false;
+
+    QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE");
+    database.setDatabaseName(qApp->applicationDirPath() + "/tests/questions.db");
+    database.open();
+
+    QSqlQuery query(database);
+
+    QString que = "SELECT * FROM settings_of_tables WHERE nameOfTable = '"
+            + currentTable + "'";
+    query.exec(que);
+
+    if(query.next())
+    {
+        isOld = true;
+    }
+
+    if(isOld)
+    {
+        QString que = "UPDATE settings_of_tables"
+                + QString(" SET")
+                + " timeForTest = "
+                + time + ", "
+                + " numOfQuestions = "
+                + numberOfQuestionsForStudents
+                + " WHERE nameOfTable = '"
+                + currentTable + "'";
+
+        query.exec(que);
+    }
+
+    database.close();
 }

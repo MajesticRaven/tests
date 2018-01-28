@@ -31,6 +31,10 @@ public slots:
 
     void save_settings_for_table(QString time, QString numberOfQuestionsForStudents);
 
+    static QString create_cipher(QString input);
+
+    static QString crack_cipher(QString input);
+
 private slots:
     void on_loginButton_clicked();
 
@@ -62,10 +66,6 @@ private slots:
 
     void on_saveQuestionButton_clicked();
 
-    QString create_cipher(QString input);
-
-    QString crack_cipher(QString input);
-
     void on_editQuestionButton_clicked();
 
     void on_addQuestionButton_clicked();
@@ -87,9 +87,7 @@ private:
     QString currentQuestion = "";
 
     bool isQuestionNew = true;
-
-    QString in = "йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮQWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890 ";
-    QString out = "юбьтимсчяэждлорпавыфъхзщшгнекуцйЮБЬТИМСЧЯЭЖДЛОРПАВЫФЪХЗЩШГНЕКУЦЙMNBVCXZLKJHGFDSAPOIUYTREWQmnbvcxzlkjhgfdsapoiuytrewq0987654321*";
+    int timeTest = 0, numberQuestions = 0;
 
 signals:
     void emit_update_table();

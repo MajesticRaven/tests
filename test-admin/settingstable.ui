@@ -59,7 +59,11 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="numberQuestionsEdit"/>
+            <widget class="QLineEdit" name="numberQuestionsEdit">
+             <property name="styleSheet">
+              <string notr="true">font: 16pt &quot;Tahoma&quot;;</string>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="QLabel" name="label_2">
@@ -72,7 +76,11 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="timeEdit"/>
+            <widget class="QLineEdit" name="timeEdit">
+             <property name="styleSheet">
+              <string notr="true">font: 16pt &quot;Tahoma&quot;;</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>

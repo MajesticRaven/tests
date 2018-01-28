@@ -1,0 +1,57 @@
+QStackedWidget
+{
+    background-color: rgba(80, 58, 46, 100);
+}
+
+QLineEdit
+{
+	background-color: rgba(80, 58, 46, 60);
+border-style: solid;
+     border: 1px solid #1e1e1e;
+     border-radius: 5;
+     padding: 1px 0px 1px 20px;
+
+}
+
+QLabel
+{
+	background-color: transparent;
+}
+
+QComboBox
+{
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    selection-background-color: #111;
+    selection-color: yellow;
+    background-color: rgba(80, 58, 46, 60);
+    border-style: solid;
+    border: 1px solid #1e1e1e;
+    border-radius: 5;
+    padding: 1px 0px 1px 20px;
+}
+
+QPushButton
+{
+	background-color: rgba(80, 58, 46, 60);
+border-style: solid;
+     border: 1px solid #1e1e1e;
+     border-radius: 5;
+     padding: 1px 0px 1px 20px;
+	font: 16pt "Times New Roman";
+}
+
+QRadioButton::indicator::unchecked
+{
+   border-image: url(:/images/radioUnchecked.png);
+   width: 50;
+height: 30;
+
+}
+
+QRadioButton::indicator::checked 
+{
+    border-image: url(:/images/radioChecked.png);
+width: 50;
+height: 30;
+}

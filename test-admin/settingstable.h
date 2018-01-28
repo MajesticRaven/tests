@@ -16,6 +16,7 @@ class settingsTable : public QDialog
 
 public:
     explicit settingsTable(QWidget *parent = 0);
+    settingsTable(QWidget *parent = 0, QString currentTable = "");
     ~settingsTable();
 
 private slots:

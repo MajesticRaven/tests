@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2018-01-23T19:28:48
+# Project created by QtCreator 2018-01-26T21:32:36
 #
 #-------------------------------------------------
 
@@ -8,7 +8,7 @@ QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = test-admin
+TARGET = test-student
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -25,27 +25,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-    mainmenu.cpp \
-    addingtable.cpp \
-    settingstable.cpp
+        mainmenu.cpp
 
 HEADERS += \
-    mainmenu.h \
-    addingtable.h \
-    settingstable.h
+        mainmenu.h
 
 FORMS += \
-    mainmenu.ui \
-    addingtable.ui \
-    settingstable.ui
+        mainmenu.ui
+
+RESOURCES += \
+    images.qrc
 
 VERSION = 1.00
 QMAKE_TARGET_COMPANY = Pavlenko Vladislav
-QMAKE_TARGET_PRODUCT = Test Constructor
-QMAKE_TARGET_DESCRIPTION = Application for creating tests for students
+QMAKE_TARGET_PRODUCT = Tests for students
+QMAKE_TARGET_DESCRIPTION = Application for improving skill
 QMAKE_TARGET_COPYRIGHT = (c)Pavlenko Vladislav
-
-RESOURCES += \
-    res.qrc
 
 win32:RC_ICONS += icon.ico

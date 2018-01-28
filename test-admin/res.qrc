@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/style.qss</file>
+        <file>res/settings.png</file>
+        <file>res/settingsInactive.png</file>
+        <file>res/radioChecked.png</file>
+        <file>res/radioUnchecked.png</file>
+    </qresource>
+</RCC>

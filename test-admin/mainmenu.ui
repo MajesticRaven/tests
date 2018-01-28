@@ -233,8 +233,14 @@
               </item>
               <item>
                <widget class="QPushButton" name="settingsButton">
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>50</height>
+                 </size>
+                </property>
                 <property name="text">
-                 <string>Settings</string>
+                 <string/>
                 </property>
                </widget>
               </item>
