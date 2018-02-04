@@ -170,7 +170,7 @@
             <item>
              <widget class="QListWidget" name="listOfTables">
               <property name="styleSheet">
-               <string notr="true">font: 10pt &quot;Tahoma&quot;;</string>
+               <string notr="true">font: 75 12pt &quot;Unispace&quot;;</string>
               </property>
              </widget>
             </item>
@@ -249,7 +249,7 @@
             <item>
              <widget class="QListWidget" name="listOfQuestions">
               <property name="styleSheet">
-               <string notr="true">font: 10pt &quot;Tahoma&quot;;</string>
+               <string notr="true">font: 75 12pt &quot;Unispace&quot;;</string>
               </property>
              </widget>
             </item>

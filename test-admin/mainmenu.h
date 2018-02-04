@@ -76,6 +76,10 @@ private slots:
 
     void on_settingsButton_clicked();
 
+    void on_listOfQuestions_itemClicked(QListWidgetItem *item);
+
+    void on_listOfTables_itemClicked(QListWidgetItem *item);
+
 private:
     Ui::MainMenu *ui;
 

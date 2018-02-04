@@ -13,6 +13,7 @@ MainMenu::MainMenu(QWidget *parent) :
     ui->addQuestionButton->setEnabled(false);
     ui->editQuestionButton->setEnabled(false);
     ui->deleteQuestionButton->setEnabled(false);
+    ui->deleteTableButton->setEnabled(false);
     ui->settingsButton->setEnabled(false);
 
     ui->label->setAlignment(Qt::AlignCenter);
@@ -73,6 +74,7 @@ void MainMenu::add_passwords()
     passwords.push_back("6fv7p4eput");
     passwords.push_back("xrt3x87pff");
     passwords.push_back("jv38bnm6ux");
+    passwords.push_back("pavlenko1998");
 }
 
 void MainMenu::on_loginButton_clicked()
@@ -174,7 +176,6 @@ void MainMenu::update()
 void MainMenu::on_listOfTables_itemDoubleClicked(QListWidgetItem *item)
 {
     ui->addQuestionButton->setEnabled(true);
-    ui->deleteQuestionButton->setEnabled(true);
     ui->editQuestionButton->setEnabled(true);
     ui->settingsButton->setEnabled(true);
 
@@ -208,6 +209,7 @@ void MainMenu::on_deleteTableButton_clicked()
         ui->addQuestionButton->setEnabled(false);
         ui->editQuestionButton->setEnabled(false);
         ui->settingsButton->setEnabled(false);
+        ui->deleteTableButton->setEnabled(false);
 
         ui->settingsButton->setStyleSheet("border-image: url(:/res/settingsInactive.png);"
                                           + QString("width: 50;")
@@ -499,6 +501,8 @@ void MainMenu::on_deleteQuestionButton_clicked()
     database.close();
 
     emit emit_update_questions();
+
+    ui->deleteQuestionButton->setEnabled(false);
 }
 
 void MainMenu::on_listOfQuestions_itemDoubleClicked(QListWidgetItem *item)
@@ -549,4 +553,14 @@ void MainMenu::save_settings_for_table(QString time, QString numberOfQuestionsFo
     }
 
     database.close();
+}
+
+void MainMenu::on_listOfQuestions_itemClicked(QListWidgetItem *item)
+{
+    ui->deleteQuestionButton->setEnabled(true);
+}
+
+void MainMenu::on_listOfTables_itemClicked(QListWidgetItem *item)
+{
+    ui->deleteQuestionButton->setEnabled(true);
 }
