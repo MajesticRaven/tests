@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QListWidgetItem>
 #include <QMessageBox>
+#include <time.h>
 
 #include "addingtable.h"
 #include "settingstable.h"

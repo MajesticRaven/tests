@@ -11,6 +11,7 @@
 #include <QTimer>
 #include <QVector>
 #include <QPixmap>
+#include <QTextCodec>
 
 struct question
 {
@@ -35,7 +36,6 @@ public:
     ~MainMenu();
 
 public slots:
-    static QString create_cipher(QString input);
 
     static QString crack_cipher(QString input);
 
@@ -60,6 +60,14 @@ private slots:
 
     void on_exitButton_clicked();
 
+    void on_firstAnswer_clicked();
+
+    void on_secondAnswer_clicked();
+
+    void on_thirdAnswer_clicked();
+
+    void on_fourthAnswer_clicked();
+
 private:
     Ui::MainMenu *ui;
 
@@ -73,6 +81,7 @@ private:
     int numberOfQuestions, timeForTest;
     int timerTime = 0;
     int mark = 6;
+    int currentPage = 1;
 
     QTimer *timer;
 };

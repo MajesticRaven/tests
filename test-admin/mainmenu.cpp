@@ -10,6 +10,13 @@ MainMenu::MainMenu(QWidget *parent) :
 
     ui->stackedWidget->setCurrentIndex(0);
 
+    ui->firstAnswer->setValidator(new QRegExpValidator(QRegExp("^[A-zА-я0-9 ]+$"), this));
+    ui->secondAnswer->setValidator(new QRegExpValidator(QRegExp("^[A-zА-я0-9 ]+$"), this));
+    ui->thirdAnswer->setValidator(new QRegExpValidator(QRegExp("^[A-zА-я0-9 ]+$"), this));
+    ui->fourthAnswer->setValidator(new QRegExpValidator(QRegExp("^[A-zА-я0-9 ]+$"), this));
+    ui->nameOfQuestionEdit->setValidator(new QRegExpValidator(QRegExp("^[A-zА-я0-9 ]+$"), this));
+
+
     ui->addQuestionButton->setEnabled(false);
     ui->editQuestionButton->setEnabled(false);
     ui->deleteQuestionButton->setEnabled(false);
@@ -151,6 +158,7 @@ void MainMenu::update_table_list()
                 }
             }
 
+            qDebug() << finalName;
             ui->listOfTables->addItem(finalName);
         }
 
@@ -176,9 +184,7 @@ void MainMenu::update()
 void MainMenu::on_listOfTables_itemDoubleClicked(QListWidgetItem *item)
 {
     ui->addQuestionButton->setEnabled(true);
-    ui->editQuestionButton->setEnabled(true);
     ui->settingsButton->setEnabled(true);
-
 
     ui->settingsButton->setStyleSheet("border-image: url(:/res/settings.png);"
                                       + QString("width: 50;")
@@ -273,6 +279,7 @@ void MainMenu::clear_adding_question()
 void MainMenu::on_backButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(1);
+    this->setEnabled(true);
 
     emit emit_clear_adding_question();
 }
@@ -280,8 +287,8 @@ void MainMenu::on_backButton_clicked()
 QString MainMenu::create_cipher(QString input)
 {
     QString output = "";
-    QString in = "йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮQWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890 ";
-    QString out = "юбьтимсчяэждлорпавыфъхзщшгнекуцйЮБЬТИМСЧЯЭЖДЛОРПАВЫФЪХЗЩШГНЕКУЦЙMNBVCXZLKJHGFDSAPOIUYTREWQmnbvcxzlkjhgfdsapoiuytrewq0987654321*";
+    QString in = "ЙЦУКЕНГШЩЗХЪЭЖДЛОРПАВЫФЯЧСМИТЬБЮйцукенгшщзхъэждлорпавыфячсмитьбюQWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890 ";
+    QString out = "ЮБЬТИМСЧЯФЫВАПРОЛДЖЭЪХЗЩШГНЕКУЦЙюбьтимсчяфывапролджэъхзщшгнекуцйMNBVCXZLKJHGFDSAPOIUYTREWQmnbvcxzlkjhgfdsapoiuytrewq0987654321*";
 
     for(int i = 0; i < input.size(); i++)
     {
@@ -300,8 +307,8 @@ QString MainMenu::create_cipher(QString input)
 QString MainMenu::crack_cipher(QString input)
 {
     QString output = "";
-    QString in = "йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮQWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890 ";
-    QString out = "юбьтимсчяэждлорпавыфъхзщшгнекуцйЮБЬТИМСЧЯЭЖДЛОРПАВЫФЪХЗЩШГНЕКУЦЙMNBVCXZLKJHGFDSAPOIUYTREWQmnbvcxzlkjhgfdsapoiuytrewq0987654321*";
+    QString in = "ЙЦУКЕНГШЩЗХЪЭЖДЛОРПАВЫФЯЧСМИТЬБЮйцукенгшщзхъэждлорпавыфячсмитьбюQWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890 ";
+    QString out = "ЮБЬТИМСЧЯФЫВАПРОЛДЖЭЪХЗЩШГНЕКУЦЙюбьтимсчяфывапролджэъхзщшгнекуцйMNBVCXZLKJHGFDSAPOIUYTREWQmnbvcxzlkjhgfdsapoiuytrewq0987654321*";
 
     for(int i = 0; i < input.size(); i++)
     {
@@ -558,9 +565,10 @@ void MainMenu::save_settings_for_table(QString time, QString numberOfQuestionsFo
 void MainMenu::on_listOfQuestions_itemClicked(QListWidgetItem *item)
 {
     ui->deleteQuestionButton->setEnabled(true);
+    ui->editQuestionButton->setEnabled(true);
 }
 
 void MainMenu::on_listOfTables_itemClicked(QListWidgetItem *item)
 {
-    ui->deleteQuestionButton->setEnabled(true);
+    ui->deleteTableButton->setEnabled(true);
 }

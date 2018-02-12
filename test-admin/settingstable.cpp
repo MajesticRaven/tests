@@ -10,8 +10,8 @@ settingsTable::settingsTable(QWidget *parent, QString currentTable) :
     this->setWindowTitle("Settings");
     this->setFixedSize(440, 170);
 
-    ui->timeEdit->setValidator(new QRegExpValidator(QRegExp("^([1-9][0-9]*|0)(\\.|,)[0-9]{2}"), this));
-    ui->numberQuestionsEdit->setValidator(new QRegExpValidator(QRegExp("^([1-9][0-9]*|0)(\\.|,)[0-9]{2}"), this));
+    ui->timeEdit->setValidator(new QRegExpValidator(QRegExp("^[0-9]{2}"), this));
+    ui->numberQuestionsEdit->setValidator(new QRegExpValidator(QRegExp("^[0-9]{2}"), this));
 
     connect(this, SIGNAL(send_the_settings(QString, QString)), parent, SLOT(save_settings_for_table(QString,QString)));
 

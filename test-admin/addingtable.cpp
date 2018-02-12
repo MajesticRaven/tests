@@ -10,11 +10,12 @@ addingTable::addingTable(QWidget *parent) :
     this->setWindowTitle("New table");
 
     connect(this, SIGNAL(refresh_list()), parentWidget(), SLOT(update()));
-    ui->nameOfTable->setValidator(new QRegExpValidator(QRegExp("^[A-zА-я ]+$"), this));
+    ui->nameOfTable->setValidator(new QRegExpValidator(QRegExp("^[A-z ]+$"), this));
 }
 
 addingTable::~addingTable()
 {
+    parentWidget()->setEnabled(true);
     delete ui;
 }
 

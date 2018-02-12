@@ -8,6 +8,7 @@ MainMenu::MainMenu(QWidget *parent) :
     ui->setupUi(this);
 
     this->setWindowTitle("Tests");
+    srand(time(NULL));
 
     ui->stackedWidget->setCurrentIndex(0);
     ui->numberQuestionLabel->setAlignment(Qt::AlignCenter);
@@ -43,6 +44,12 @@ MainMenu::MainMenu(QWidget *parent) :
     while(query.next())
     {
         QString name = query.value(1).toString();
+
+        if(name == "settings_of_tables")
+        {
+            continue;
+        }
+
         QString finalName = "";
 
         for(int i = 0; i < name.size(); i++)
@@ -55,11 +62,6 @@ MainMenu::MainMenu(QWidget *parent) :
             {
                 finalName += name.at(i);
             }
-        }
-
-        if(finalName == "settings of tables")
-        {
-            continue;
         }
 
         ui->testComboBox->addItem(finalName);
@@ -75,31 +77,11 @@ MainMenu::~MainMenu()
     delete ui;
 }
 
-QString MainMenu::create_cipher(QString input)
-{
-    QString output = "";
-    QString in = "йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮQWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890 ";
-    QString out = "юбьтимсчяэждлорпавыфъхзщшгнекуцйЮБЬТИМСЧЯЭЖДЛОРПАВЫФЪХЗЩШГНЕКУЦЙMNBVCXZLKJHGFDSAPOIUYTREWQmnbvcxzlkjhgfdsapoiuytrewq0987654321*";
-
-    for(int i = 0; i < input.size(); i++)
-    {
-        for(int j = 0; j < in.size(); j++)
-        {
-            if(input.at(i) == in.at(j))
-            {
-                output += out.at(j);
-            }
-        }
-    }
-
-    return output;
-}
-
 QString MainMenu::crack_cipher(QString input)
 {
     QString output = "";
-    QString in = "йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮQWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890 ";
-    QString out = "юбьтимсчяэждлорпавыфъхзщшгнекуцйЮБЬТИМСЧЯЭЖДЛОРПАВЫФЪХЗЩШГНЕКУЦЙMNBVCXZLKJHGFDSAPOIUYTREWQmnbvcxzlkjhgfdsapoiuytrewq0987654321*";
+    QString in = "ЙЦУКЕНГШЩЗХЪЭЖДЛОРПАВЫФЯЧСМИТЬБЮйцукенгшщзхъэждлорпавыфячсмитьбюQWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890 ";
+    QString out = "ЮБЬТИМСЧЯФЫВАПРОЛДЖЭЪХЗЩШГНЕКУЦЙюбьтимсчяфывапролджэъхзщшгнекуцйMNBVCXZLKJHGFDSAPOIUYTREWQmnbvcxzlkjhgfdsapoiuytrewq0987654321*";
 
     for(int i = 0; i < input.size(); i++)
     {
@@ -122,13 +104,26 @@ void MainMenu::on_confirmButton_clicked()
         return;
     }
 
-    if(ui->testComboBox->currentText() == "")
+    if(ui->testComboBox->currentText().isEmpty())
     {
         return;
     }
 
-    currentTest = ui->testComboBox->currentText();
+
+    currentTest = "";
     studentsName = ui->surnameEdit->text();
+
+    for(int i = 0; i < ui->testComboBox->currentText().size(); i++)
+    {
+        if(ui->testComboBox->currentText().at(i) == "_")
+        {
+            currentTest += "_";
+        }
+        else
+        {
+            currentTest += ui->testComboBox->currentText().at(i);
+        }
+    }
 
     questions.clear();
     answers.clear();
@@ -176,11 +171,13 @@ void MainMenu::on_confirmButton_clicked()
         questions.erase(questions.begin() + num);
     }
 
-    for(int i = 0; i < rand() % numberOfQuestions; i++)
+    for(int i = 0; i < numberOfQuestions; i++)
     {
-        question buf = questions[i];
-        questions[i] = questions[numberOfQuestions - 1];
-        questions[numberOfQuestions - 1] = buf;
+        int fIn = rand() % numberOfQuestions;
+        int sIn = rand() % numberOfQuestions;
+        question buf = questions.at(fIn);
+        questions[fIn] = questions.at(sIn);
+        questions[sIn] = buf;
     }
 
     database.close();
@@ -195,6 +192,8 @@ void MainMenu::on_confirmButton_clicked()
     timer->start();
 
     update_timer();
+
+    currentPage = 1;
 
     create_question();
 
@@ -221,11 +220,54 @@ void MainMenu::update_timer()
 
 void MainMenu::create_question()
 {
-    ui->questionLabel->setText(questions.at(ui->numberQuestionLabel->text().toInt() - 1).questionText);
-    ui->firstAnswer->setText(questions.at(ui->numberQuestionLabel->text().toInt() - 1).firstAnswer);
-    ui->secondAnswer->setText(questions.at(ui->numberQuestionLabel->text().toInt() - 1).secondAnswer);
-    ui->thirdAnswer->setText(questions.at(ui->numberQuestionLabel->text().toInt() - 1).thirdAnswer);
-    ui->fourthAnswer->setText(questions.at(ui->numberQuestionLabel->text().toInt() - 1).fourthAnswer);
+    ui->questionLabel->setText(questions.at(currentPage - 1).questionText);
+    ui->firstAnswer->setText(questions.at(currentPage - 1).firstAnswer);
+    ui->secondAnswer->setText(questions.at(currentPage - 1).secondAnswer);
+    ui->thirdAnswer->setText(questions.at(currentPage - 1).thirdAnswer);
+    ui->fourthAnswer->setText(questions.at(currentPage - 1).fourthAnswer);
+
+    if(answers.at(currentPage-1)
+            == questions.at(currentPage-1).firstAnswer)
+    {
+        ui->firstAnswer->setChecked(true);
+        ui->secondAnswer->setChecked(false);
+        ui->thirdAnswer->setChecked(false);
+        ui->fourthAnswer->setChecked(false);
+    }
+
+    else if(answers.at(currentPage-1)
+            == questions.at(currentPage-1).secondAnswer)
+    {
+        ui->firstAnswer->setChecked(false);
+        ui->secondAnswer->setChecked(true);
+        ui->thirdAnswer->setChecked(false);
+        ui->fourthAnswer->setChecked(false);
+    }
+
+    else if(answers.at(currentPage-1)
+            == questions.at(currentPage-1).thirdAnswer)
+    {
+        ui->firstAnswer->setChecked(false);
+        ui->secondAnswer->setChecked(false);
+        ui->thirdAnswer->setChecked(true);
+        ui->fourthAnswer->setChecked(false);
+    }
+
+    else if(answers.at(currentPage-1)
+            == questions.at(currentPage-1).fourthAnswer)
+    {
+        ui->firstAnswer->setChecked(false);
+        ui->secondAnswer->setChecked(false);
+        ui->thirdAnswer->setChecked(false);
+        ui->fourthAnswer->setChecked(true);
+    }
+    else
+    {
+        ui->firstAnswer->setChecked(false);
+        ui->secondAnswer->setChecked(false);
+        ui->thirdAnswer->setChecked(false);
+        ui->fourthAnswer->setChecked(false);
+    }
 }
 
 void MainMenu::end_testing()
@@ -240,8 +282,14 @@ void MainMenu::end_testing()
             count++;
         }
     }
-    double oneTask = numberOfQuestions / 12;
+
+    qDebug() << QString::number(count);
+    double oneTask = 12.0 / numberOfQuestions;
     mark = count * oneTask;
+
+
+    qDebug() << QString::number(oneTask);
+    qDebug() << QString::number(mark);
 
     QPixmap originalImage(":/images/stars.png");
     ui->markLabel->setText(QString::number(mark));
@@ -277,19 +325,17 @@ void MainMenu::on_nextQuestionButton_clicked()
 {
     if(students_answer() != "")
     {
-        answers[ui->numberQuestionLabel->text().toInt() - 1] = students_answer();
+        answers[currentPage-1] = students_answer();
     }
 
-    int page = ui->numberQuestionLabel->text().toInt();
+    currentPage++;
 
-    page++;
-
-    if(page == numberOfQuestions + 1)
+    if(currentPage == questions.size() + 1)
     {
-        page = 1;
+        currentPage = 1;
     }
 
-    ui->numberQuestionLabel->setText(QString::number(page));
+    ui->numberQuestionLabel->setText(QString::number(currentPage));
 
     create_question();
 }
@@ -322,19 +368,17 @@ void MainMenu::on_previousQuestionButton_clicked()
 {
     if(students_answer() != "")
     {
-        answers[ui->numberQuestionLabel->text().toInt() - 1] = students_answer();
+        answers[currentPage-1] = students_answer();
     }
 
-    int page = ui->numberQuestionLabel->text().toInt();
+    currentPage--;
 
-    page--;
-
-    if(page == 0)
+    if(currentPage == 0)
     {
-        page = 12;
+        currentPage = questions.size();
     }
 
-    ui->numberQuestionLabel->setText(QString::number(page));
+    ui->numberQuestionLabel->setText(QString::number(currentPage));
 
     create_question();
 }
@@ -352,4 +396,36 @@ void MainMenu::on_okEndButton_clicked()
 void MainMenu::on_exitButton_clicked()
 {
     exit(0);
+}
+
+void MainMenu::on_firstAnswer_clicked()
+{
+    ui->firstAnswer->setChecked(true);
+    ui->secondAnswer->setChecked(false);
+    ui->thirdAnswer->setChecked(false);
+    ui->fourthAnswer->setChecked(false);
+}
+
+void MainMenu::on_secondAnswer_clicked()
+{
+    ui->firstAnswer->setChecked(false);
+    ui->secondAnswer->setChecked(true);
+    ui->thirdAnswer->setChecked(false);
+    ui->fourthAnswer->setChecked(false);
+}
+
+void MainMenu::on_thirdAnswer_clicked()
+{
+    ui->firstAnswer->setChecked(false);
+    ui->secondAnswer->setChecked(false);
+    ui->thirdAnswer->setChecked(true);
+    ui->fourthAnswer->setChecked(false);
+}
+
+void MainMenu::on_fourthAnswer_clicked()
+{
+    ui->firstAnswer->setChecked(false);
+    ui->secondAnswer->setChecked(false);
+    ui->thirdAnswer->setChecked(false);
+    ui->fourthAnswer->setChecked(true);
 }
