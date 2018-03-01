@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 
     MainMenu w;
 
-   // w.setWindowFlag(Qt::WindowStaysOnTopHint);
+    w.setWindowFlag(Qt::WindowStaysOnTopHint);
     w.showFullScreen();
 
     return a.exec();

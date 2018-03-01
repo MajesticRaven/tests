@@ -10,13 +10,6 @@ MainMenu::MainMenu(QWidget *parent) :
 
     ui->stackedWidget->setCurrentIndex(0);
 
-    ui->firstAnswer->setValidator(new QRegExpValidator(QRegExp("^[A-zА-я0-9 ]+$"), this));
-    ui->secondAnswer->setValidator(new QRegExpValidator(QRegExp("^[A-zА-я0-9 ]+$"), this));
-    ui->thirdAnswer->setValidator(new QRegExpValidator(QRegExp("^[A-zА-я0-9 ]+$"), this));
-    ui->fourthAnswer->setValidator(new QRegExpValidator(QRegExp("^[A-zА-я0-9 ]+$"), this));
-    ui->nameOfQuestionEdit->setValidator(new QRegExpValidator(QRegExp("^[A-zА-я0-9 ]+$"), this));
-
-
     ui->addQuestionButton->setEnabled(false);
     ui->editQuestionButton->setEnabled(false);
     ui->deleteQuestionButton->setEnabled(false);
@@ -105,6 +98,14 @@ void MainMenu::update_question_list()
     QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE");
     database.setDatabaseName(qApp->applicationDirPath() + "/tests/questions.db");
     database.open();
+
+    for(int i = 0; i < currentTable.size(); i++)
+    {
+        if(currentTable.at(i) == ' ')
+        {
+            currentTable[i] = '_';
+        }
+    }
 
     QSqlQuery query(database);
 
@@ -205,6 +206,10 @@ void MainMenu::on_deleteTableButton_clicked()
 
     QString que = "DROP TABLE " + ui->listOfTables->currentItem()->text();
     query.exec(que);
+    que = "DELETE FROM settings_of_tables WHERE nameOfTable = '"
+            + ui->listOfTables->currentItem()->text()
+            + "'";
+    query.exec(que);
 
     if(ui->listOfTables->currentItem()->text() == currentTable)
     {
@@ -225,6 +230,8 @@ void MainMenu::on_deleteTableButton_clicked()
     database.close();
 
     emit emit_update_table();
+
+    ui->deleteTableButton->setEnabled(false);
 }
 
 void MainMenu::delete_all_radios()
@@ -287,17 +294,23 @@ void MainMenu::on_backButton_clicked()
 QString MainMenu::create_cipher(QString input)
 {
     QString output = "";
-    QString in = "ЙЦУКЕНГШЩЗХЪЭЖДЛОРПАВЫФЯЧСМИТЬБЮйцукенгшщзхъэждлорпавыфячсмитьбюQWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890 ";
-    QString out = "ЮБЬТИМСЧЯФЫВАПРОЛДЖЭЪХЗЩШГНЕКУЦЙюбьтимсчяфывапролджэъхзщшгнекуцйMNBVCXZLKJHGFDSAPOIUYTREWQmnbvcxzlkjhgfdsapoiuytrewq0987654321*";
+    QString in = "ЙЦУКЕНГШЩЗХЪЭЖДЛОРПАВЫФЯЧСМИТЬБЮйцукенгшщзхъэждлорпавыфячсмитьбюQWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890 *";
+    QString out = "ЮБЬТИМСЧЯФЫВАПРОЛДЖЭЪХЗЩШГНЕКУЦЙюбьтимсчяфывапролджэъхзщшгнекуцйMNBVCXZLKJHGFDSAPOIUYTREWQmnbvcxzlkjhgfdsapoiuytrewq0987654321*#";
 
     for(int i = 0; i < input.size(); i++)
     {
+        bool isFound = false;
         for(int j = 0; j < in.size(); j++)
         {
             if(input.at(i) == in.at(j))
             {
                 output += out.at(j);
+                isFound = true;
             }
+        }
+        if(isFound == false)
+        {
+            output += input.at(i);
         }
     }
 
@@ -307,17 +320,23 @@ QString MainMenu::create_cipher(QString input)
 QString MainMenu::crack_cipher(QString input)
 {
     QString output = "";
-    QString in = "ЙЦУКЕНГШЩЗХЪЭЖДЛОРПАВЫФЯЧСМИТЬБЮйцукенгшщзхъэждлорпавыфячсмитьбюQWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890 ";
-    QString out = "ЮБЬТИМСЧЯФЫВАПРОЛДЖЭЪХЗЩШГНЕКУЦЙюбьтимсчяфывапролджэъхзщшгнекуцйMNBVCXZLKJHGFDSAPOIUYTREWQmnbvcxzlkjhgfdsapoiuytrewq0987654321*";
+    QString in = "ЙЦУКЕНГШЩЗХЪЭЖДЛОРПАВЫФЯЧСМИТЬБЮйцукенгшщзхъэждлорпавыфячсмитьбюQWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890 *";
+    QString out = "ЮБЬТИМСЧЯФЫВАПРОЛДЖЭЪХЗЩШГНЕКУЦЙюбьтимсчяфывапролджэъхзщшгнекуцйMNBVCXZLKJHGFDSAPOIUYTREWQmnbvcxzlkjhgfdsapoiuytrewq0987654321*#";
 
     for(int i = 0; i < input.size(); i++)
     {
+        bool isFound = false;
         for(int j = 0; j < out.size(); j++)
         {
             if(input.at(i) == out.at(j))
             {
                 output += in.at(j);
+                isFound = true;
             }
+        }
+        if(isFound == false)
+        {
+            output += input.at(i);
         }
     }
 
@@ -326,6 +345,14 @@ QString MainMenu::crack_cipher(QString input)
 
 void MainMenu::on_saveQuestionButton_clicked()
 {
+    for(int i = 0; i < currentTable.size(); i++)
+    {
+        if(currentTable.at(i) == ' ')
+        {
+            currentTable[i] = '_';
+        }
+    }
+
     QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE");
     database.setDatabaseName(qApp->applicationDirPath() + "/tests/questions.db");
     database.open();

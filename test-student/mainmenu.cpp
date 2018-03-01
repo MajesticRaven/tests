@@ -80,17 +80,29 @@ MainMenu::~MainMenu()
 QString MainMenu::crack_cipher(QString input)
 {
     QString output = "";
-    QString in = "ЙЦУКЕНГШЩЗХЪЭЖДЛОРПАВЫФЯЧСМИТЬБЮйцукенгшщзхъэждлорпавыфячсмитьбюQWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890 ";
-    QString out = "ЮБЬТИМСЧЯФЫВАПРОЛДЖЭЪХЗЩШГНЕКУЦЙюбьтимсчяфывапролджэъхзщшгнекуцйMNBVCXZLKJHGFDSAPOIUYTREWQmnbvcxzlkjhgfdsapoiuytrewq0987654321*";
+    QString in = "ЙЦУКЕНГШЩЗХЪЭЖДЛОРПАВЫФЯЧСМИТЬБЮйцукенгшщзхъэждлорпавыфячсмитьбюQWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890 *";
+    QString out = "ЮБЬТИМСЧЯФЫВАПРОЛДЖЭЪХЗЩШГНЕКУЦЙюбьтимсчяфывапролджэъхзщшгнекуцйMNBVCXZLKJHGFDSAPOIUYTREWQmnbvcxzlkjhgfdsapoiuytrewq0987654321*#";
 
     for(int i = 0; i < input.size(); i++)
     {
+        if(i % 50 == 0)
+        {
+            output += "\n";
+        }
+
+        bool isFound = false;
         for(int j = 0; j < out.size(); j++)
         {
             if(input.at(i) == out.at(j))
             {
                 output += in.at(j);
+
+                isFound = true;
             }
+        }
+        if(isFound == false)
+        {
+            output += input.at(i);
         }
     }
 
@@ -115,7 +127,7 @@ void MainMenu::on_confirmButton_clicked()
 
     for(int i = 0; i < ui->testComboBox->currentText().size(); i++)
     {
-        if(ui->testComboBox->currentText().at(i) == "_")
+        if(ui->testComboBox->currentText().at(i) == " ")
         {
             currentTest += "_";
         }
@@ -157,9 +169,10 @@ void MainMenu::on_confirmButton_clicked()
 
     query.exec(que);
 
-    if(query.next())
+    while(query.next())
     {
-        numberOfQuestions = query.value(2).toString().toInt();
+        qDebug() << query.value(2).toInt();
+        numberOfQuestions = query.value(2).toInt();
         timeForTest = query.value(1).toInt();
     }
 
@@ -171,18 +184,16 @@ void MainMenu::on_confirmButton_clicked()
         questions.erase(questions.begin() + num);
     }
 
-    for(int i = 0; i < numberOfQuestions; i++)
+    for(int i = 0; i < questions.size(); i++)
     {
-        int fIn = rand() % numberOfQuestions;
-        int sIn = rand() % numberOfQuestions;
-        question buf = questions.at(fIn);
-        questions[fIn] = questions.at(sIn);
-        questions[sIn] = buf;
+        int fIn = rand() % questions.size();
+        int sIn = rand() % questions.size();
+        questions.swap(fIn, sIn);
     }
 
     database.close();
 
-    for(int i = 0; i < numberOfQuestions; i++)
+    for(int i = 0; i < questions.size(); i++)
     {
         answers.push_back(" ");
     }

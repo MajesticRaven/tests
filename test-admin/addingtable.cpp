@@ -10,7 +10,7 @@ addingTable::addingTable(QWidget *parent) :
     this->setWindowTitle("New table");
 
     connect(this, SIGNAL(refresh_list()), parentWidget(), SLOT(update()));
-    ui->nameOfTable->setValidator(new QRegExpValidator(QRegExp("^[A-z ]+$"), this));
+    ui->nameOfTable->setValidator(new QRegExpValidator(QRegExp("^[A-zА-я ]+$"), this));
 }
 
 addingTable::~addingTable()
